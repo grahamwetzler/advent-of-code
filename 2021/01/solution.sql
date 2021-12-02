@@ -58,4 +58,4 @@ select   row_number() over (order by 1) as row_num
 )
 
 select *
- from answer
+  from answer
