@@ -1,3 +1,3 @@
 # Advent of Code
 
-Solutions for Advent of Code in Snowflake SQL.
+Solutions for [Advent of Code](https://adventofcode.com/) in Snowflake SQL.
