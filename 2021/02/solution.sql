@@ -11,12 +11,15 @@ with input as (
 
 , part_1_step_1 as (
   select   case
-           when direction in ('up', 'down') then 'depth'
-           when direction in ('forward') then 'horizontal'
+           when direction in ('up', 'down')
+                then 'depth'
+           when direction in ('forward')
+                then 'horizontal'
             end as net_direction
          , case
-           when direction = 'up' then units * -1
-           else units
+           when direction = 'up'
+                then units * -1
+                else units
             end as units
     from input
 )
@@ -31,16 +34,20 @@ with input as (
 , part_2 as (
   select   direction
          , case
-           when direction = 'down' then units
-           when direction = 'up' then units * -1
+           when direction = 'down'
+                then units
+           when direction = 'up'
+                then units * -1
             end as aim
          , case
-           when direction = 'forward' then units
+           when direction = 'forward'
+                then units
             end as horizontal_position
          , sum(aim) over (order by row_num) as current_aim
          , sum(horizontal_position) over (order by row_num) as current_horizontal_position
          , case
-           when direction = 'forward' then current_aim * horizontal_position
+           when direction = 'forward'
+                then current_aim * horizontal_position
             end as depth
     from input
 )
