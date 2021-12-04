@@ -37,138 +37,47 @@ with input as (
 )
 
 , gamma as (
-  select   binary_to_number(
-                concat(
-                  (select b1
-                     from input
-                    group by 1
-                    order by count(*) desc
-                    limit 1)
-                , (select b2
-                     from input
-                    group by 1
-                    order by count(*) desc
-                    limit 1)
-                , (select b3
-                     from input
-                    group by 1
-                    order by count(*) desc
-                    limit 1)
-                , (select b4
-                     from input
-                    group by 1
-                    order by count(*) desc
-                    limit 1)
-                , (select b5
-                     from input
-                    group by 1
-                    order by count(*) desc
-                    limit 1)
-                , (select b6
-                     from input
-                    group by 1
-                    order by count(*) desc
-                    limit 1)
-                , (select b7
-                     from input
-                    group by 1
-                    order by count(*) desc
-                    limit 1)
-                , (select b8
-                     from input
-                    group by 1
-                    order by count(*) desc
-                    limit 1)
-                , (select b9
-                     from input
-                    group by 1
-                    order by count(*) desc
-                    limit 1)
-                , (select b10
-                     from input
-                    group by 1
-                    order by count(*) desc
-                    limit 1)
-                , (select b11
-                     from input
-                    group by 1
-                    order by count(*) desc
-                    limit 1)
-                , (select b12
-                     from input
-                    group by 1
-                    order by count(*) desc
-                    limit 1)
-                    )) as gamma
+  select binary_to_number(
+              concat(
+                (select b1  from input group by 1 order by count(*) desc limit 1)
+              , (select b2  from input group by 1 order by count(*) desc limit 1)
+              , (select b3  from input group by 1 order by count(*) desc limit 1)
+              , (select b4  from input group by 1 order by count(*) desc limit 1)
+              , (select b5  from input group by 1 order by count(*) desc limit 1)
+              , (select b6  from input group by 1 order by count(*) desc limit 1)
+              , (select b7  from input group by 1 order by count(*) desc limit 1)
+              , (select b8  from input group by 1 order by count(*) desc limit 1)
+              , (select b9  from input group by 1 order by count(*) desc limit 1)
+              , (select b10 from input group by 1 order by count(*) desc limit 1)
+              , (select b11 from input group by 1 order by count(*) desc limit 1)
+              , (select b12 from input group by 1 order by count(*) desc limit 1)
+                  )) as gamma
 )
 
 , epsilon as (
-  select   binary_to_number(
-                concat(
-                  (select b1
-                     from input
-                    group by 1
-                    order by count(*) asc
-                    limit 1)
-                , (select b2
-                     from input
-                    group by 1
-                    order by count(*) asc
-                    limit 1)
-                , (select b3
-                     from input
-                    group by 1
-                    order by count(*) asc
-                    limit 1)
-                , (select b4
-                     from input
-                    group by 1
-                    order by count(*) asc
-                    limit 1)
-                , (select b5
-                     from input
-                    group by 1
-                    order by count(*) asc
-                    limit 1)
-                , (select b6
-                     from input
-                    group by 1
-                    order by count(*) asc
-                    limit 1)
-                , (select b7
-                     from input
-                    group by 1
-                    order by count(*) asc
-                    limit 1)
-                , (select b8
-                     from input
-                    group by 1
-                    order by count(*) asc
-                    limit 1)
-                , (select b9
-                     from input
-                    group by 1
-                    order by count(*) asc
-                    limit 1)
-                , (select b10
-                     from input
-                    group by 1
-                    order by count(*) asc
-                    limit 1)
-                , (select b11
-                     from input
-                    group by 1
-                    order by count(*) asc
-                    limit 1)
-                , (select b12
-                     from input
-                    group by 1
-                    order by count(*) asc
-                    limit 1)
-                    )) as epsilon
+  select binary_to_number(
+              concat(
+                (select b1  from input group by 1 order by count(*) asc limit 1)
+              , (select b2  from input group by 1 order by count(*) asc limit 1)
+              , (select b3  from input group by 1 order by count(*) asc limit 1)
+              , (select b4  from input group by 1 order by count(*) asc limit 1)
+              , (select b5  from input group by 1 order by count(*) asc limit 1)
+              , (select b6  from input group by 1 order by count(*) asc limit 1)
+              , (select b7  from input group by 1 order by count(*) asc limit 1)
+              , (select b8  from input group by 1 order by count(*) asc limit 1)
+              , (select b9  from input group by 1 order by count(*) asc limit 1)
+              , (select b10 from input group by 1 order by count(*) asc limit 1)
+              , (select b11 from input group by 1 order by count(*) asc limit 1)
+              , (select b12 from input group by 1 order by count(*) asc limit 1)
+                  )) as epsilon
 )
 
-select (select gamma
-          from gamma) *
-       (select epsilon
-          from epsilon) as power_consumption
+, part_1 as (
+  select (select gamma
+            from gamma) *
+         (select epsilon
+            from epsilon) as power_consumption
+)
+
+select *
+  from part_1
