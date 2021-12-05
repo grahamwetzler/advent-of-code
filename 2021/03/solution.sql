@@ -9,7 +9,7 @@ create or replace function binary_to_number(a string)
 
 create table aoc.input_2021.day_03 (
     b1 integer
-  , b2 integer
+  , b1 integer
   , b3 integer
   , b4 integer
   , b5 integer
@@ -34,6 +34,11 @@ create table aoc.input_2021.day_03_sample (
 with input as (
   select *
     from aoc.input_2021.day_03
+)
+
+, input_sample as (
+  select *
+    from aoc.input_2021.day_03_sample
 )
 
 , gamma as (
@@ -79,5 +84,29 @@ with input as (
             from epsilon) as power_consumption
 )
 
+, counts as (
+  select    count_if(b1 = 1) as b1_1
+          , count_if(b1 = 0) as b1_0
+          , count_if(b2 = 1) as b2_1
+          , count_if(b2 = 0) as b2_0
+          , count_if(b3 = 1) as b3_1
+          , count_if(b3 = 0) as b3_0
+          , count_if(b4 = 1) as b4_1
+          , count_if(b4 = 0) as b4_0
+          , count_if(b5 = 1) as b5_1
+          , count_if(b5 = 0) as b5_0
+    from input_sample
+)
+
+, bit_ranks as (
+  select 1
+)
+
+, oxygen_generator_rating as (
+  select   *
+    from input_sample
+   where b1 = (select b1  from input group by 1 order by count(*) desc limit 1)
+)
+
 select *
-  from part_1
+  from oxygen_generator_rating
