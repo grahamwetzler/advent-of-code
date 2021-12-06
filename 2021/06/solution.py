@@ -11,13 +11,11 @@ def parse_input() -> list:
 @dataclass
 class Fish:
     timer: int = 8
-    days_alive: int = 0
 
     def __repr__(self):
         return str(self.timer)
 
     def day(self):
-        self.days_alive += 1
         self.timer -= 1
         if self.timer < 0:
             self.timer = 6
@@ -33,10 +31,9 @@ def count_fish(days) -> int:
             if new_fish := fish.day():
                 new_fishes.append(new_fish)
         fishes += new_fishes
-        print(f"Day {day}:", fishes)
 
     return len(fishes)
 
 
 if __name__ == "__main__":
-    print("Part 1:", count_fish(18))
+    print("Part 1:", count_fish(days=80))
