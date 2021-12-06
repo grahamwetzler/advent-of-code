@@ -17,9 +17,8 @@ def dangerous_areas(array: np.array, threshold: int = 2) -> int:
 
 def part_1() -> int:
     coordinates = parse_input()
-    grid_x = max([coodinate[0] for i in coordinates for coodinate in i]) + 1
-    grid_y = max([coodinate[1] for i in coordinates for coodinate in i]) + 1
-    grid = np.zeros([grid_x, grid_y], dtype=int)
+    grid_dims = max([coodinate[0] for i in coordinates for coodinate in i]) + 1
+    grid = np.zeros((grid_dims, grid_dims), dtype=int)
     for (x1, y1), (x2, y2) in coordinates:
         x = sorted([x1, x2])
         x[1] += 1
