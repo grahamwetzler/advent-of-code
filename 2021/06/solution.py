@@ -1,39 +1,38 @@
 from pathlib import Path
-from dataclasses import dataclass
 
+class School:
+    def __init__(self, days: int):
+        self.days = days
+        self.ages = self.parse_input()
+        self.timers = {k: 0 for k in range(9)}
+        for age in self.ages:
+            self.timers[age] += 1
+        self.step(self.days)
 
-def parse_input() -> list:
-    puzzle_input = Path("2021/06/input.txt").read_text()
-    split = puzzle_input.split(",")
-    return [int(n) for n in split]
+    def parse_input(self) -> list:
+        puzzle_input = Path("2021/06/input.txt").read_text()
+        split = puzzle_input.split(",")
+        return [int(n) for n in split]
+    
+    def step(self, days):
+        for _ in range(days):
+            new_fish = 0
+            for timer, timer_value in self.timers.items():
+                if timer == 0:
+                    new_fish += timer_value
+                else:
+                    self.timers[timer-1] = timer_value
 
+            self.timers[8] = new_fish
+            self.timers[6] += new_fish
 
-@dataclass
-class Fish:
-    timer: int = 8
+        return self
 
-    def __repr__(self):
-        return str(self.timer)
-
-    def day(self):
-        self.timer -= 1
-        if self.timer < 0:
-            self.timer = 6
-            return Fish()
-
-
-def count_fish(days) -> int:
-    puzzle_input = parse_input()
-    fishes = [Fish(t) for t in puzzle_input]
-    for day in range(days):
-        new_fishes = []
-        for fish in fishes:
-            if new_fish := fish.day():
-                new_fishes.append(new_fish)
-        fishes += new_fishes
-
-    return len(fishes)
+    @property
+    def size(self) -> int:
+        return sum(self.timers.values())
 
 
 if __name__ == "__main__":
-    print("Part 1:", count_fish(days=80))
+    print("Part 1:", School(18).size)
+    print("Part 2:", School(256).size)
