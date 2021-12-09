@@ -7,7 +7,7 @@ class Heightmap:
         self.heightmap = self.parse_input()
 
     def __repr__(self):
-        return pprint.pformat(self.heightmap).replace(",", "")
+        return pprint.pformat(self.heightmap, width=302).replace(", ", "")
 
     def parse_input(self):
         text = Path("2021/09/input.txt").read_text()
@@ -26,20 +26,16 @@ class Heightmap:
             for col_idx, value in enumerate(row):
                 comparison_values = []
 
-                try:
+                if col_idx - 1 >= 0:
                     comparison_values.append(self.heightmap[row_idx][col_idx - 1])
-                except IndexError:
-                    pass
 
                 try:
                     comparison_values.append(self.heightmap[row_idx][col_idx + 1])
                 except IndexError:
                     pass
 
-                try:
+                if row_idx - 1 >= 0:
                     comparison_values.append(self.heightmap[row_idx - 1][col_idx])
-                except IndexError:
-                    pass
 
                 try:
                     comparison_values.append(self.heightmap[row_idx + 1][col_idx])
@@ -57,7 +53,8 @@ class Heightmap:
 
 
 def part_1():
-    heightmap = Heightmap().find_low_points()
+    heightmap = Heightmap()
+    heightmap.find_low_points()
     return heightmap.risk_level
 
 
