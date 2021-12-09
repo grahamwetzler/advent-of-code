@@ -1,13 +1,13 @@
+from math import prod
 from pathlib import Path
-import pprint
+
+import numpy as np
+import scipy.ndimage
 
 
 class Heightmap:
     def __init__(self):
         self.heightmap = self.parse_input()
-
-    def __repr__(self):
-        return pprint.pformat(self.heightmap, width=302).replace(", ", "")
 
     def parse_input(self):
         text = Path("2021/09/input.txt").read_text()
@@ -47,6 +47,18 @@ class Heightmap:
 
         return self
 
+    def n_largest_basins(self, n):
+        array = np.array(self.heightmap)
+        basin_mask = array < 9
+        labels = scipy.ndimage.label(basin_mask)
+        labels, heightmap_counts = labels
+        basins = []
+        for group in range(1, heightmap_counts + 1):
+            basins.append((labels == group).sum())
+        basins.sort()
+
+        return basins[-n:]
+
     @property
     def risk_level(self):
         return sum([i + 1 for i in self.low_points])
@@ -58,5 +70,13 @@ def part_1():
     return heightmap.risk_level
 
 
+def part_2():
+    heightmap = Heightmap()
+    heightmap.find_low_points()
+    basins = heightmap.n_largest_basins(3)
+    return prod(basins)
+
+
 if __name__ == "__main__":
     print("Part 1:", part_1())
+    print("Part 2:", part_2())
