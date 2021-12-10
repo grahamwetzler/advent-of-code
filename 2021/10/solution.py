@@ -55,7 +55,7 @@ def part_2():
                 score += scores[m]
 
             missing_bracket_scores.append(score)
-    
+
     return median(missing_bracket_scores)
 
 
