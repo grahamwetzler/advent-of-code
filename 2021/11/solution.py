@@ -5,24 +5,24 @@ from pathlib import Path
 @dataclass
 class Octopus:
     energy_level: int
-    flash: bool = False
+    flashed: bool = False
     flashes: int = 0
 
     def __str__(self) -> str:
-        if self.flash:
+        if self.flashed:
             return f"\033[93;1m{self.energy_level}\033[0m"
         else:
             return f"{self.energy_level}"
 
     def step(self) -> bool:
         """Returns True if flashed, otherwise False."""
-        if not self.flash:
+        if not self.flashed:
             self.energy_level += 1
         else:
             return False
 
         if self.energy_level > 9:
-            self.flash = True
+            self.flashed = True
             self.flashes += 1
             self.energy_level = 0
             return True
@@ -55,35 +55,30 @@ class Grid:
                     if octopus.step():
                         self._step_adjacent(adjacent_y, adjacent_x)
 
-        return self
-
     def _reset_flashes(self) -> None:
         for row in self.grid:
             for octopus in row:
-                octopus.flash = False
+                octopus.flashed = False
 
-    def step_n_times(self, times: int):
+    def _step(self) -> None:
+        for row_idx, row in enumerate(self.grid):
+            for col_idx, octopus in enumerate(row):
+                if octopus.step():
+                    self._step_adjacent(row_idx, col_idx)
+
+    def step_n_times(self, times: int) -> None:
         for _ in range(times):
-            for row_idx, row in enumerate(self.grid):
-                for col_idx, octopus in enumerate(row):
-                    if octopus.step():
-                        self._step_adjacent(row_idx, col_idx)
-
+            self._step()
             self._reset_flashes()
-
-        return self
 
     @property
     def steps_until_simultaneous_flash(self) -> int:
         step = 0
         while True:
             step += 1
-            for row_idx, row in enumerate(self.grid):
-                for col_idx, octopus in enumerate(row):
-                    if octopus.step():
-                        self._step_adjacent(row_idx, col_idx)
+            self._step()
 
-            if all([o.flash for row in self.grid for o in row]):
+            if all([octopus.flashed for row in self.grid for octopus in row]):
                 break
 
             self._reset_flashes()
@@ -95,13 +90,13 @@ class Grid:
         return sum([octopus.flashes for row in self.grid for octopus in row])
 
 
-def part_1(puzzle_input):
+def part_1(puzzle_input: str) -> int:
     grid = Grid(puzzle_input)
     grid.step_n_times(times=100)
     return grid.flashes
 
 
-def part_2(puzzle_input):
+def part_2(puzzle_input: str) -> int:
     grid = Grid(puzzle_input)
     return grid.steps_until_simultaneous_flash
 
