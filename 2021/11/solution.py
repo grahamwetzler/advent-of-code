@@ -6,7 +6,7 @@ from pathlib import Path
 class Octopus:
     energy_level: int
     flashed: bool = False
-    flashes: int = 0
+    times_flashed: int = 0
 
     def __str__(self) -> str:
         if self.flashed:
@@ -23,7 +23,7 @@ class Octopus:
 
         if self.energy_level > 9:
             self.flashed = True
-            self.flashes += 1
+            self.times_flashed += 1
             self.energy_level = 0
             return True
 
@@ -55,7 +55,7 @@ class Grid:
                     if octopus.step():
                         self._step_adjacent(adjacent_y, adjacent_x)
 
-    def _reset_flashes(self) -> None:
+    def _reset_flashed_state(self) -> None:
         for row in self.grid:
             for octopus in row:
                 octopus.flashed = False
@@ -69,7 +69,7 @@ class Grid:
     def step_n_times(self, times: int) -> None:
         for _ in range(times):
             self._step()
-            self._reset_flashes()
+            self._reset_flashed_state()
 
     @property
     def steps_until_simultaneous_flash(self) -> int:
@@ -81,13 +81,13 @@ class Grid:
             if all([octopus.flashed for row in self.grid for octopus in row]):
                 break
 
-            self._reset_flashes()
+            self._reset_flashed_state()
 
         return step
 
     @property
     def flashes(self) -> int:
-        return sum([octopus.flashes for row in self.grid for octopus in row])
+        return sum([octopus.times_flashed for row in self.grid for octopus in row])
 
 
 def part_1(puzzle_input: str) -> int:
