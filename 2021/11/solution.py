@@ -31,22 +31,22 @@ class Octopus:
 
 
 class Grid:
-    def __init__(self, grid: str):
+    def __init__(self, grid: str) -> None:
         self.grid = self._parse_grid(grid)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "\n".join(["".join([str(o) for o in row]) for row in self.grid])
 
     def _parse_grid(self, grid: str) -> list[list[int]]:
         return [[Octopus(int(i)) for i in row] for row in grid.split("\n") if row]
 
-    def _is_valid(self, row_idx: int, col_idx: int):
+    def _is_valid(self, row_idx: int, col_idx: int) -> bool:
         """Checks if row and column are valid octopi."""
         if 0 <= row_idx <= len(self.grid) - 1 and 0 <= col_idx <= len(self.grid[0]) - 1:
             return True
         return False
 
-    def _step_adjacent(self, row_idx: int, col_idx: int):
+    def _step_adjacent(self, row_idx: int, col_idx: int) -> None:
         for x in [-1, 0, 1]:
             for y in [-1, 0, 1]:
                 adjacent_y, adjacent_x = row_idx + y, col_idx + x
@@ -57,21 +57,24 @@ class Grid:
 
         return self
 
-    def step_n_times(self, times):
-        for step in range(times):
+    def _reset_flashes(self) -> None:
+        for row in self.grid:
+            for octopus in row:
+                octopus.flash = False
+
+    def step_n_times(self, times: int):
+        for _ in range(times):
             for row_idx, row in enumerate(self.grid):
                 for col_idx, octopus in enumerate(row):
                     if octopus.step():
                         self._step_adjacent(row_idx, col_idx)
 
-            for row in self.grid:
-                for octopus in row:
-                    octopus.flash = False
+            self._reset_flashes()
 
         return self
 
     @property
-    def steps_until_simultaneous_flash(self):
+    def steps_until_simultaneous_flash(self) -> int:
         step = 0
         while True:
             step += 1
@@ -80,19 +83,15 @@ class Grid:
                     if octopus.step():
                         self._step_adjacent(row_idx, col_idx)
 
-            flattened_grid = [o.flash for row in self.grid for o in row]
-
-            if sum(flattened_grid) == len(flattened_grid):
+            if all([o.flash for row in self.grid for o in row]):
                 break
 
-            for row in self.grid:
-                for octopus in row:
-                    octopus.flash = False
+            self._reset_flashes()
 
         return step
 
     @property
-    def flashes(self):
+    def flashes(self) -> int:
         return sum([octopus.flashes for row in self.grid for octopus in row])
 
 
