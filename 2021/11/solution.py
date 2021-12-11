@@ -15,6 +15,7 @@ class Octopus:
             return f"{self.energy_level}"
 
     def step(self) -> bool:
+        """Returns True if flashed, otherwise False."""
         if not self.flash:
             self.energy_level += 1
         else:
