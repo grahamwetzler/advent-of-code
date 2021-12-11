@@ -37,6 +37,11 @@ class Grid:
     def __repr__(self) -> str:
         return "\n".join(["".join([str(o) for o in row]) for row in self.grid])
 
+    def step_n_times(self, times: int) -> None:
+        for _ in range(times):
+            self._step()
+            self._reset_flashed_state()
+
     def _parse_grid(self, grid: str) -> list[list[int]]:
         return [[Octopus(int(i)) for i in row] for row in grid.split("\n") if row]
 
@@ -65,11 +70,6 @@ class Grid:
             for col_idx, octopus in enumerate(row):
                 if octopus.step():
                     self._step_adjacent(row_idx, col_idx)
-
-    def step_n_times(self, times: int) -> None:
-        for _ in range(times):
-            self._step()
-            self._reset_flashed_state()
 
     @property
     def steps_until_simultaneous_flash(self) -> int:
