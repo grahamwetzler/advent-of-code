@@ -108,6 +108,5 @@ def part_2(puzzle_input):
 
 if __name__ == "__main__":
     puzzle_input = Path("2021/11/input.txt").read_text()
-    print(puzzle_input)
     print("Part 1:", part_1(puzzle_input))
     print("Part 2:", part_2(puzzle_input))
