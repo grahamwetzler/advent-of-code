@@ -2,30 +2,17 @@ from pathlib import Path
 
 import numpy as np
 
-np.set_printoptions(linewidth=100, formatter=dict(bool=lambda x: "#" if x else "."))
+np.set_printoptions(linewidth=100, formatter={"bool": lambda x: "#" if x else "."})
 
 
 class Origami:
     def __init__(self, puzzle_input) -> None:
         self.coordinates, self.instructions = self._parse(puzzle_input)
-        self._setup_grid()
-
-    def _parse(self, puzzle_input) -> tuple[list]:
-        c, i = puzzle_input.split("\n\n")
-        return (
-            [
-                [int(x), int(y)]
-                for x, y in [
-                    coordinate.split(",") for coordinate in c.split("\n") if coordinate
-                ]
-            ],
-            [instruction.split(" ")[2] for instruction in i.split("\n") if instruction],
-        )
+        self._initialize_grid()
 
     def fold(self, instruction) -> None:
         axis, n = instruction.split("=")
         n = int(n)
-        y_shape, x_shape = self.grid.shape
         if axis == "y":
             lower = np.flipud(self.grid[n + 1 :])
             upper = self.grid[:n]
@@ -35,10 +22,28 @@ class Origami:
             right = np.fliplr(self.grid[:, n + 1 :])
             self.grid = left + right
 
-    def _setup_grid(self) -> None:
-        grid_x_dimension = max([c[0] for c in self.coordinates]) + 1
-        grid_y_dimension = max([c[1] for c in self.coordinates]) + 1
-        self.grid = np.zeros((grid_y_dimension, grid_x_dimension), dtype=bool)
+    def _parse(self, puzzle_input) -> tuple[list]:
+        coordinates, instructions = puzzle_input.split("\n\n")
+        return (
+            [
+                [int(x), int(y)]
+                for x, y in [
+                    coordinate.split(",")
+                    for coordinate in coordinates.split("\n")
+                    if coordinate
+                ]
+            ],
+            [
+                instruction.split(" ")[2]
+                for instruction in instructions.split("\n")
+                if instruction
+            ],
+        )
+
+    def _initialize_grid(self) -> None:
+        x_dim = max([c[0] for c in self.coordinates]) + 1
+        y_dim = max([c[1] for c in self.coordinates]) + 1
+        self.grid = np.zeros((y_dim, x_dim), dtype=bool)
         for x, y in self.coordinates:
             self.grid[y][x] = True
 
