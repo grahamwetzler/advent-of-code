@@ -14,12 +14,12 @@ class Origami:
         axis, n = instruction.split("=")
         n = int(n)
         if axis == "y":
-            lower = np.flipud(self.grid[n + 1 :])
-            upper = self.grid[:n]
+            lower = np.flipud(self.grid[n + 1 :, ...])
+            upper = self.grid[:n, ...]
             self.grid = upper + lower
         else:
-            left = self.grid[:, :n]
-            right = np.fliplr(self.grid[:, n + 1 :])
+            left = self.grid[..., :n]
+            right = np.fliplr(self.grid[..., n + 1 :])
             self.grid = left + right
 
     def _parse(self, puzzle_input: str) -> tuple[list]:
@@ -41,8 +41,8 @@ class Origami:
         )
 
     def _initialize_grid(self) -> None:
-        x_dim = max([c[0] for c in self.coordinates]) + 1
-        y_dim = max([c[1] for c in self.coordinates]) + 1
+        x_dim = max([x for x, _ in self.coordinates]) + 1
+        y_dim = max([y for _, y in self.coordinates]) + 1
         self.grid = np.zeros((y_dim, x_dim), dtype=bool)
         for x, y in self.coordinates:
             self.grid[y][x] = True
