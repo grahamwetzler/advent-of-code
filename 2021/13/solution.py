@@ -6,11 +6,11 @@ np.set_printoptions(linewidth=100, formatter={"bool": lambda x: "#" if x else ".
 
 
 class Origami:
-    def __init__(self, puzzle_input) -> None:
+    def __init__(self, puzzle_input: str) -> None:
         self.coordinates, self.instructions = self._parse(puzzle_input)
         self._initialize_grid()
 
-    def fold(self, instruction) -> None:
+    def fold(self, instruction: str) -> None:
         axis, n = instruction.split("=")
         n = int(n)
         if axis == "y":
@@ -22,7 +22,7 @@ class Origami:
             right = np.fliplr(self.grid[:, n + 1 :])
             self.grid = left + right
 
-    def _parse(self, puzzle_input) -> tuple[list]:
+    def _parse(self, puzzle_input: str) -> tuple[list]:
         coordinates, instructions = puzzle_input.split("\n\n")
         return (
             [
@@ -48,13 +48,13 @@ class Origami:
             self.grid[y][x] = True
 
 
-def part_1(puzzle_input):
+def part_1(puzzle_input: str) -> int:
     origami = Origami(puzzle_input)
     origami.fold(origami.instructions[0])
     return origami.grid.sum()
 
 
-def part_2(puzzle_input):
+def part_2(puzzle_input: str) -> np.ndarray:
     origami = Origami(puzzle_input)
     for instruction in origami.instructions:
         origami.fold(instruction)
