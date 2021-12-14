@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 class Polymer:
-    def __init__(self, puzzle_input: str) -> None:
+    def __init__(self, puzzle_input: str, steps: int) -> None:
         self._parse(puzzle_input)
         self.pairs = Counter()
         self.elements = Counter(self.template)
@@ -13,6 +13,8 @@ class Polymer:
             pair = "".join(pair)
             self.pairs[pair] += 1
 
+        self.step(steps)
+
     def _parse(self, puzzle_input: str) -> None:
         puzzle_input = puzzle_input.splitlines()
         self.template = puzzle_input[0]
@@ -20,8 +22,8 @@ class Polymer:
             k: v for k, v in (rule.split(" -> ") for rule in puzzle_input[2:])
         }
 
-    def step(self, times: int) -> None:
-        for _ in range(times):
+    def step(self, steps: int) -> "Polymer":
+        for _ in range(steps):
             for pair, count in list(self.pairs.items()):
                 self.pairs[pair] -= count
 
@@ -33,6 +35,8 @@ class Polymer:
                 if self.pairs[pair] == 0:
                     del self.pairs[pair]
 
+        return self
+
     @property
     def max(self) -> int:
         return max(self.elements.values())
@@ -43,8 +47,7 @@ class Polymer:
 
 
 def day_14(puzzle_input: str, steps: int) -> int:
-    polymer = Polymer(puzzle_input)
-    polymer.step(steps)
+    polymer = Polymer(puzzle_input, steps)
     return polymer.max - polymer.min
 
 
