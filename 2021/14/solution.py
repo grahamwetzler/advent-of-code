@@ -32,9 +32,6 @@ class Polymer:
                 self.pairs[insert + pair[1]] += count
                 self.elements[insert] += count
 
-                if self.pairs[pair] == 0:
-                    del self.pairs[pair]
-
         return self
 
     @property
