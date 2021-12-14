@@ -24,10 +24,10 @@ class Polymer:
         for _ in range(times):
             for pair, count in list(self.pairs.items()):
                 self.pairs[pair] -= count
+
                 insert = self.rules[pair]
                 self.pairs[pair[0] + insert] += count
                 self.pairs[insert + pair[1]] += count
-
                 self.elements[insert] += count
 
                 if self.pairs[pair] == 0:
