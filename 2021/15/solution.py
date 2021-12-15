@@ -35,15 +35,13 @@ class Cavern:
                     visited.add((row, col))
 
     def make_big(self):
-        wrap = lambda x: 1 if x + 1 > 9 else x + 1
-        new_y = [self.map]
-        for _ in range(4):
-            new_y.append(np.vectorize(wrap)(new_y[-1]))
-        self.map = np.concatenate(new_y, axis=1)
-        new_x = [self.map]
-        for _ in range(4):
-            new_x.append(np.vectorize(wrap)(new_x[-1]))
-        self.map = np.concatenate(new_x, axis=0)
+        for axis in [0, 1]:
+            new_dim = [self.map]
+            for _ in range(4):
+                new_dim.append(
+                    np.vectorize(lambda x: 1 if x + 1 > 9 else x + 1)(new_dim[-1])
+                )
+            self.map = np.concatenate(new_dim, axis=axis)
 
     def _parse_input(self, puzzle_input: str) -> np.ndarray:
         return np.array([list(row) for row in puzzle_input.splitlines()], dtype=int)
@@ -57,7 +55,6 @@ def part_1(puzzle_input):
 def part_2(puzzle_input):
     cavern = Cavern(puzzle_input)
     cavern.make_big()
-    print(cavern.map.shape)
     return cavern.dijkstra()
 
 
